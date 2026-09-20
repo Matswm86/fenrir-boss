@@ -1,0 +1,232 @@
+# AI engineer. Assumes little Python on entry (L1 drills it), then APIs, RAG with evals,
+# agents and MCP, LLMOps, and finally the consultancy side: scoping, pricing, handover.
+
+[track]
+key = "ai-engineer"
+name = "AI engineer"
+summary = "From Python by hand to shipping LLM systems: APIs and structured output, RAG with evals, agents and MCP, LLMOps, then scoping and pricing client work."
+role = "AI engineer at a small consultancy"
+common_packages = ["pytest", "ruff"]
+
+[[levels]]
+name = "Onboarding"
+phase = "day zero"
+competencies = [
+  "move around a terminal with cd, ls, pwd, cat",
+  "create a git repo, make a commit, read git status and git log",
+  "create a virtual environment with uv and say what it isolates",
+  "run a Python file and read the last line of a traceback",
+  "keep secrets in an env file that git ignores",
+]
+shapes = [
+  "set up the dev environment for a client repo the boss scaffolded, prove the tests run (and fail) from a clean venv, commit the setup",
+]
+required_accepted = 1
+estimate_hours = "1"
+gate_questions = [
+  "What does `uv venv` create on disk, and why is it in .gitignore?",
+  "What are three things `git status` can say about a file?",
+  "Read me the last line of a traceback you saw this week and tell me what it meant.",
+]
+extra_rules = "Almost no Python to write yet. The ticket is about the environment and the workflow."
+seed = "onboarding"
+
+[[levels]]
+name = "Python by hand"
+phase = "phase 1"
+competencies = [
+  "variables, ints, floats, strings, f-strings",
+  "if / elif / else and comparisons",
+  "for and while loops, range, enumerate",
+  "lists, tuples, sets: indexing, slicing, append, membership",
+  "dicts: get, items, counting, nesting",
+  "functions: parameters, defaults, return values, docstrings",
+  "reading and writing text and CSV files with pathlib and csv",
+  "JSON load and dump",
+  "try / except with a specific exception and a useful error message",
+  "if __name__ == '__main__' and a tiny CLI with sys.argv",
+  "simple parsing and formatting of numbers and dates",
+]
+shapes = [
+  "a script that reads a client's CSV or JSON export and prints a summary (totals, top N, counts by category)",
+  "a validator that reports bad rows with line numbers",
+  "a converter from one file shape to another",
+  "a small text report generator using f-strings",
+  "a lookup tool over a JSON file driven by a command-line argument",
+]
+required_accepted = 6
+estimate_hours = "1 to 2"
+gate_questions = [
+  "Pick one accepted ticket. Walk me through the data flow from file to printed number without opening the file.",
+  "When the tests failed the first time on your last ticket, what did the traceback say and what did you change?",
+  "Where would that script break on a file twice the size, or with a missing column? What would you do about it?",
+]
+extra_rules = "Standard library only. No classes unless the ticket is about reading one. A clear loop beats a clever one-liner."
+seed = "sales-summary"
+
+[[levels]]
+name = "APIs, environment, structure"
+phase = "phase 1, late"
+competencies = [
+  "HTTP GET and POST with requests (or urllib) and status-code handling",
+  "an API key from an environment variable, with a clear failure when missing",
+  "JSON responses: parse, validate the shape, handle missing keys",
+  "logging with a module logger, levels and a file handler",
+  "dataclasses for records",
+  "a package layout with pyproject, src/ and tests/",
+  "pytest fixtures, parametrize, pytest.raises",
+  "structured LLM output: ask for JSON, parse, validate, retry once on garbage",
+  "a first LLM API call behind a function with a fallback",
+  "NumPy arrays; Pandas read_csv, filter, groupby",
+]
+shapes = [
+  "a client-facing CLI that calls a JSON API (or a fake the tests provide) and reports",
+  "a summarizer that chunks a text file and calls an LLM behind an injectable function so tests use a fake",
+  "a JSON-extraction step with shape validation and one retry",
+  "a Pandas report over a client's CSV with groupby and a written sanity check",
+  "a refactor of an earlier script into src/ plus tests with a fixture",
+]
+packages = ["requests", "httpx", "python-dotenv", "pydantic", "numpy", "pandas", "rich", "openai", "anthropic", "google-genai", "streamlit"]
+required_accepted = 5
+estimate_hours = "2 to 3"
+gate_questions = [
+  "Explain what happens between `requests.get` returning and your code printing a value: every place it can fail.",
+  "Show me the test that proves the LLM is never called during tests. How does it work?",
+  "What is in your pyproject, and why is src/ on the path?",
+]
+extra_rules = "Network calls sit behind a function the tests can replace; tests never hit the network. Any key comes from an env file that is gitignored; ship a .env.example."
+
+[[levels]]
+name = "RAG and evals"
+phase = "phase 2"
+competencies = [
+  "chunk a document by size and by structure, with overlap",
+  "embed chunks (a real embedding API, or a deterministic fake the tests provide)",
+  "store and query vectors in Qdrant or an in-memory index",
+  "retrieve top-k with scores and cite sources",
+  "write an eval set of 10 to 20 questions with expected sources",
+  "compute recall@k and answer accuracy",
+  "log retrieved chunks with scores for every question",
+  "write DECISIONS.md: why this chunk size, why this k",
+]
+shapes = [
+  "index a client's documents (provided) and answer questions with citations",
+  "build the eval set first, then the retriever, then report recall@5",
+  "compare two chunking strategies on one eval set",
+  "add keyword search, fuse it with vector search, measure the delta",
+]
+packages = ["requests", "httpx", "python-dotenv", "pydantic", "numpy", "pandas", "rich", "openai", "anthropic", "google-genai", "streamlit", "fastapi", "uvicorn", "qdrant-client"]
+required_accepted = 4
+estimate_hours = "3 to 5"
+gate_questions = [
+  "For one wrong answer from your system: was it the retriever or the generator? How do you know?",
+  "What is recall@5 on your eval set, and what did you change to move it?",
+  "Why that chunk size?",
+]
+extra_rules = "Evals before features: a ticket that adds retrieval ships an eval file and a number. Embeddings in tests are a deterministic fake."
+
+[[levels]]
+name = "Agents, MCP, production basics"
+phase = "phase 2, late"
+competencies = [
+  "a tool-calling loop with read-only tools, JSON tool schemas, a step cap and a stop",
+  "an MCP server exposing two or three read-only tools with FastMCP",
+  "structured logs with a trace id per request",
+  "retries with backoff and a timeout on every external call",
+  "a Dockerfile and a compose file for the service",
+  "an SLI, SLO and error-budget write-up for one endpoint",
+  "blast-radius thinking: least-privilege tools, human approval before writes",
+]
+shapes = [
+  "wrap the retriever as an MCP server with read-only tools and a smoke test",
+  "an agent that answers a client question with two read-only tools and a trace log",
+  "add retries, timeouts and a fallback to an existing client, with tests",
+  "containerise a service and write its SLO document",
+]
+packages = ["requests", "httpx", "python-dotenv", "pydantic", "numpy", "pandas", "rich", "openai", "anthropic", "google-genai", "streamlit", "fastapi", "uvicorn", "qdrant-client", "fastmcp", "mcp"]
+required_accepted = 4
+estimate_hours = "3 to 6"
+gate_questions = [
+  "Which of your tools can change state, and what stops the model from calling it?",
+  "Show me one trace from request to tool result to answer. Where is the latency?",
+  "Your SLO is 99 percent. How many bad minutes a month is that, and what happens when they are spent?",
+]
+extra_rules = "Read-only tools first. Any write tool needs an explicit approval step and a test that proves it is not called without one."
+
+[[levels]]
+name = "LLMOps, cloud, debugging"
+phase = "phase 3"
+competencies = [
+  "model routing across two providers with a fallback that pages, not just degrades",
+  "prompt caching measured: latency and cost before and after",
+  "a cost forecast per 1,000 requests",
+  "the eval suite in CI (GitHub Actions) blocking on regression",
+  "debugging drills: breakpoint(), git bisect, reading a planted bug from a traceback",
+  "profiling with cProfile, confirmed with py-spy",
+  "mapping the sandbox stack to one public cloud (compute, vector search, model hosting, secrets, monitoring) in writing",
+]
+shapes = [
+  "a planted-bug ticket: the repo misbehaves, find it, fix it, write the postmortem",
+  "add a provider fallback with an alert path and a test that proves the alert fires",
+  "put the eval suite in CI and make it fail on purpose",
+  "a cloud mapping document for one service, with a cost estimate",
+  "measure prompt caching on a repeated-prefix workload",
+]
+packages = ["requests", "httpx", "python-dotenv", "pydantic", "numpy", "pandas", "rich", "openai", "anthropic", "google-genai", "streamlit", "fastapi", "uvicorn", "qdrant-client", "fastmcp", "mcp", "hypothesis"]
+required_accepted = 4
+estimate_hours = "3 to 6"
+gate_questions = [
+  "Walk me through the last bug you fixed: hypothesis, evidence, fix, proof.",
+  "What pages when the primary model is retired?",
+  "Which managed service replaces your local vector store, and what does it cost at 100 users?",
+]
+extra_rules = "Every degradation path emits a typed log line and a counter. Silent fallback is a bug."
+
+[[levels]]
+name = "Consultancy"
+phase = "phase 4"
+kind = "doc"
+competencies = [
+  "run a scoping call with a non-technical client",
+  "write a one-page statement of work: problem, out of scope, deliverables, acceptance criteria, assumptions",
+  "price it (hourly, fixed, retainer) and defend the number",
+  "the five AI clauses: IP of prompts and evals, data handling, measurable acceptance, drift ownership, model-version pinning",
+  "a transparency and data-protection note for the client's jurisdiction",
+  "a handover document and a monitoring-retainer proposal",
+]
+shapes = [
+  "hold the scoping call, then write the SOW and a price",
+  "rewrite a bad SOW the boss hands you",
+  "write the handover and retainer for a delivered system",
+  "a compliance note for a client use case",
+]
+required_accepted = 3
+estimate_hours = "2 to 4"
+gate_questions = [
+  "What is the acceptance criterion in your SOW, and how would a court read it?",
+  "Who owns the eval harness after handover?",
+  "What did the client not say that changes the price?",
+]
+extra_rules = "kind is \"doc\". Files are templates with headings and one-line hints only. meeting must be a client_call 1 day out. run_command is null."
+
+[[series]]
+key = "docsearch"
+name = "docsearch: the company's own retrieval library"
+levels = [2, 4]
+goal = "One importable package the company reuses on every RAG job: load documents, chunk them, index them, search them, and measure the search with an eval file. It starts with keyword search and no dependencies and grows a vector backend later."
+constraints = [
+  "Pure functions and small dataclasses; no framework.",
+  "Every milestone ships tests with hand-made documents where the right answer is obvious to a human.",
+  "Embeddings in tests are a deterministic fake; the network is never touched.",
+  "Each milestone ends with a number in the README: recall@5 on the fixed eval file.",
+]
+milestones = [
+  "load a folder of .txt and .md files into Document records with a stable id",
+  "chunk by size with overlap, and by markdown heading, behind one interface",
+  "BM25 keyword search over chunks, top-k with scores",
+  "an eval runner: questions plus expected document ids in JSON, recall@k out",
+  "a vector backend behind the same search interface, with an injectable embedder",
+  "hybrid search with reciprocal rank fusion, and the measured delta",
+  "package it: pyproject, README with the numbers, ruff clean",
+  "wrap it as an MCP server with two read-only tools and a smoke test",
+]

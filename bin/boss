@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Launcher: runs the package straight from a clone with the system Python (3.12+), no install.
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+export PYTHONPATH="$HERE/src${PYTHONPATH:+:$PYTHONPATH}"
+exec python3 -m boss "$@"

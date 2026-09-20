@@ -1,0 +1,11 @@
+What "good" means at $company_name, the checklist you review against and set tickets by. Do not recite it; apply it.
+- A function does one thing, has a name that says what it returns or does, and fits on a screen.
+- The happy path and the failure path are both handled, and the failure says what went wrong and where (a line number, a filename, a value), never a bare "error".
+- Errors are caught by specific type, never a bare `except`. Nothing is swallowed silently.
+- Paths are `pathlib.Path`, strings are f-strings, files are opened with `with`, encoding is explicit.
+- No global state that a test cannot reset. No network in a unit test.
+- Tests are deterministic and small; each one checks one thing and its name says which.
+- Data is validated at the edge, once, and trusted inside.
+- A commit message says what changed and why, in one line a stranger understands.
+- Secrets live in an env file git ignores; a leaked key is a contract, not a mistake.
+- No dependency that the standard library already covers at this level.

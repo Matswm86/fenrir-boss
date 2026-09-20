@@ -1,0 +1,214 @@
+# Python from scratch. For someone who has never written a program. Seven levels, standard
+# library only until the last two. Every ticket is a small paid job for a fictional client.
+
+[track]
+key = "python-foundations"
+name = "Python foundations"
+summary = "Learn Python from zero by typing every line yourself: values, decisions, loops, collections, functions, files, errors, tests, a first package."
+role = "junior Python developer"
+common_packages = ["pytest", "ruff"]
+
+[[levels]]
+name = "Onboarding"
+phase = "day zero"
+competencies = [
+  "move around a terminal with cd, ls, pwd, cat",
+  "create a git repo, make a commit, read git status and git log",
+  "create a virtual environment with uv and say what it isolates",
+  "run a Python file and read the last line of a traceback",
+  "keep secrets in an env file that git ignores",
+]
+shapes = [
+  "set up the dev environment for a client repo the boss scaffolded, prove the tests run (and fail) from a clean venv, commit the setup",
+]
+required_accepted = 1
+estimate_hours = "1"
+gate_questions = [
+  "What does `uv venv` create on disk, and why is it in .gitignore?",
+  "What are three things `git status` can say about a file?",
+  "Read me the last line of a traceback you saw this week and tell me what it meant.",
+]
+extra_rules = "Almost no Python to write yet. The ticket is about the environment and the workflow."
+seed = "onboarding"
+
+[[levels]]
+name = "Values and decisions"
+phase = "weeks 1 to 3"
+competencies = [
+  "variables, ints, floats, strings, booleans",
+  "arithmetic, rounding, integer division and remainder",
+  "f-strings, including :.2f",
+  "comparisons and if / elif / else",
+  "and, or, not",
+  "a function with parameters and a return value",
+  "reading a failing test and saying what it expected",
+]
+shapes = [
+  "two or three tiny pure functions that compute a price, a fee, a discount or a label from numbers and strings",
+  "a function that classifies a value into categories with if / elif / else",
+  "a function that formats a line of text for a receipt or a label",
+]
+required_accepted = 5
+estimate_hours = "1"
+gate_questions = [
+  "What is the difference between `=` and `==`, and between `print` and `return`?",
+  "Pick one accepted ticket. What does each function return for an input the tests did not cover?",
+  "Why did your first failing test fail, in your own words?",
+]
+extra_rules = "No loops, no lists, no files yet. Two to four functions, each under ten lines when solved. Every function is pure: arguments in, value out, no input() and no print() inside helpers."
+seed = "price-labels"
+
+[[levels]]
+name = "Loops and collections"
+phase = "weeks 4 to 7"
+competencies = [
+  "for loops over a list, range and enumerate",
+  "while loops with a clear stop condition",
+  "lists: indexing, slicing, append, membership, len",
+  "accumulating a total, a count, a minimum or maximum in a loop",
+  "dicts: get, items, counting, a dict of lists",
+  "tuples and unpacking",
+  "sets for uniqueness",
+  "sorted with key= and reverse=",
+]
+shapes = [
+  "functions that take a list of numbers or strings and return a total, a count or the top N",
+  "count things by category into a dict",
+  "find duplicates or missing items between two lists",
+  "turn a list of tuples into a small text table",
+]
+required_accepted = 6
+estimate_hours = "1 to 2"
+gate_questions = [
+  "Walk me through one of your loops by hand for a list of three items: the value of every variable on every pass.",
+  "When is a dict the right tool and when is a list?",
+  "What does your code do with an empty list? How do you know?",
+]
+extra_rules = "Data arrives as Python literals in the tests, not from files. A clear loop beats a clever one-liner; no comprehensions required."
+
+[[levels]]
+name = "Files, text and errors"
+phase = "weeks 8 to 11"
+competencies = [
+  "reading and writing text files with pathlib",
+  "CSV with csv.DictReader and converting strings to numbers",
+  "JSON load and dump",
+  "string methods: split, strip, join, lower, startswith, replace",
+  "try / except with a specific exception and a useful message",
+  "if __name__ == '__main__' and a tiny CLI with sys.argv",
+  "simple parsing and formatting of dates with datetime",
+]
+shapes = [
+  "a script that reads a client's CSV or JSON export and prints a summary (totals, top N, counts by category)",
+  "a validator that reports bad rows with line numbers",
+  "a converter from one file shape to another",
+  "a lookup tool over a JSON file driven by a command-line argument",
+]
+required_accepted = 6
+estimate_hours = "1 to 2"
+gate_questions = [
+  "Pick one accepted ticket. Walk me through the data flow from file to printed number without opening the file.",
+  "When the tests failed the first time on your last ticket, what did the traceback say and what did you change?",
+  "Where would that script break on a file twice the size, or with a missing column? What would you do about it?",
+]
+extra_rules = "Standard library only. No classes. A missing file never shows the client a traceback."
+seed = "sales-summary"
+
+[[levels]]
+name = "Structure and tests"
+phase = "weeks 12 to 15"
+competencies = [
+  "splitting a script into modules and importing between them",
+  "dataclasses for records",
+  "a first class with two or three methods, when state justifies it",
+  "writing your own pytest tests: arrange, act, assert",
+  "pytest fixtures, parametrize, pytest.raises, tmp_path",
+  "argparse for a real command-line interface",
+  "logging with a module logger instead of print",
+  "type hints on every function signature",
+]
+shapes = [
+  "refactor an earlier script into two modules plus tests the learner writes (the boss tests only the public functions)",
+  "a CLI with two subcommands over a JSON data file",
+  "a dataclass-based record loader with validation and its own tests",
+  "find and fix a planted bug, then write the test that would have caught it",
+]
+required_accepted = 5
+estimate_hours = "2 to 3"
+gate_questions = [
+  "Show me a test you wrote that failed for the right reason before it passed. What was the reason?",
+  "Why is that a class and not three functions? Convince me.",
+  "What does your logger print at INFO that a client would want to see at three in the morning?",
+]
+extra_rules = "From this level the learner also writes tests. The acceptance criteria name a minimum number of their own tests, and the review reads them first."
+
+[[levels]]
+name = "The outside world"
+phase = "weeks 16 to 19"
+competencies = [
+  "HTTP GET with requests or httpx, status codes, timeouts",
+  "JSON APIs: parse, check the shape, handle missing keys",
+  "an API key from an environment variable, with a clear failure when missing",
+  "sqlite3: create a table, insert, select with parameters",
+  "a package layout with pyproject, src/ and tests/",
+  "network calls behind a function the tests can replace",
+]
+shapes = [
+  "a client-facing CLI that calls a JSON API (a fake the tests provide) and reports",
+  "load a CSV into SQLite and answer three questions with SQL",
+  "add a cache file so the tool does not call the API twice for the same thing",
+  "package an earlier tool with pyproject so `uv run toolname` works",
+]
+packages = ["requests", "httpx", "python-dotenv", "rich"]
+required_accepted = 4
+estimate_hours = "2 to 3"
+gate_questions = [
+  "Explain what happens between `requests.get` returning and your code printing a value: every place it can fail.",
+  "Show me the test that proves the network is never touched during tests. How does it work?",
+  "Why a parameterised SQL query and never an f-string?",
+]
+extra_rules = "Tests never hit the network. Any key comes from a gitignored env file; ship a .env.example."
+
+[[levels]]
+name = "Capstone"
+phase = "weeks 20 to 24"
+competencies = [
+  "scope a small tool from a vague client request into written acceptance criteria",
+  "plan the work as three to five commits before typing",
+  "build it end to end: data in, logic, output, tests, README",
+  "write a README a stranger can follow",
+  "demo it and defend the decisions",
+]
+shapes = [
+  "a scoping call with the client, then a one-page plan the boss signs off, then the build over two or three tickets",
+  "extend the capstone with one feature the client asks for late, without breaking the tests",
+  "a written handover: what it does, what it does not, how to run it",
+]
+packages = ["requests", "httpx", "python-dotenv", "rich"]
+required_accepted = 3
+estimate_hours = "3 to 5"
+gate_questions = [
+  "What did you cut from the scope, and what did the client say?",
+  "Which test would you be most nervous to delete, and why?",
+  "What would you do differently if you started this tool again tomorrow?",
+]
+extra_rules = "The first capstone ticket schedules a client_call meeting one day out. The learner proposes the function names; stubs contain only what the plan agreed."
+
+[[series]]
+key = "textkit"
+name = "textkit: the company's own text utilities library"
+levels = [2, 4]
+goal = "A small package of pure, tested functions the company reuses in client work: cleaning names, parsing amounts and dates typed by humans, slugs, and a plain-text table formatter."
+constraints = [
+  "Pure functions, standard library only.",
+  "Every function ships with tests whose expected values were worked out by hand first.",
+  "No function is longer than twenty lines; split it instead.",
+]
+milestones = [
+  "clean_name and initials: whitespace, casing, particles like 'van' and 'de'",
+  "parse_amount: '1 234,50', '1,234.50', '12kr' and friends into a float, or a clear ValueError",
+  "parse_date: three human formats into a date, with the ambiguous ones refused",
+  "slugify: any title to a safe file name",
+  "table: a list of dicts to an aligned plain-text table",
+  "package it: pyproject, README with worked examples, ruff clean",
+]

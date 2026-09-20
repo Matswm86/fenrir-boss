@@ -1,0 +1,2 @@
+Ticket $ticket_id "$title" for $client was due $due and is not submitted. Days overdue: $overdue.
+Write the short mail $boss_name sends $engineer_name about it: two to four sentences, their first name and a comma on the first line, your first name at the end. No guilt trip, no pep talk, no headings. Ask what is blocking, or offer to cut scope, and name the one command that hands it in to hand it in (`boss submit $ticket_id`). Plain text.

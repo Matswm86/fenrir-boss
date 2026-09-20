@@ -1,0 +1,87 @@
+# The default client pool, used by every track that does not bring its own [[clients]].
+# All fiction: no real company, no real person. "hidden" facts are only revealed when the
+# learner asks the right question in a scoping call. Edit freely, or copy into your own track.
+
+[[clients]]
+name = "Kvernbit Bakery"
+sector = "bakery with two shops and a wholesale line to cafes"
+contact = "Anne-Lise Torvund"
+role = "owner"
+data = "daily sales CSV per shop, wholesale orders in a spreadsheet, a product list with allergens and prices"
+situation = "She spends Friday afternoons reconciling the two shops' sales exports against wholesale invoices by hand. Wants 'something that just tells me the numbers'."
+hidden = [
+  "Budget is 2,500 EUR for a first version, could stretch to 4,000 if it saves a full day a week.",
+  "The wholesale spreadsheet has three different date formats because two staff edit it.",
+  "Her accountant needs the monthly totals by the 5th; that is the real deadline.",
+  "She tried a no-code tool last year and it broke when a column was renamed.",
+]
+
+[[clients]]
+name = "Havblikk Seafood"
+sector = "small seafood exporter, twelve staff"
+contact = "Roar Skjelbred"
+role = "logistics manager"
+data = "shipment manifests as JSON from the freight partner, temperature logs as CSV, customer orders by email"
+situation = "Shipments arrive with temperature logs nobody reads until a customer complains. He wants alerts and a weekly summary."
+hidden = [
+  "A single rejected pallet costs about 6,000 EUR; two last year.",
+  "The freight partner's JSON changed shape twice without notice.",
+  "The CEO wants 'AI' in the pitch to the bank; Roar just wants the alerts.",
+  "Customer emails arrive in three languages.",
+]
+
+[[clients]]
+name = "Ridgeway Hiking Club"
+sector = "hiking club, nonprofit, 800 members"
+contact = "Ingrid Aasheim"
+role = "volunteer secretary"
+data = "member list CSV, trip sign-ups from a web form as JSON, trip reports as text"
+situation = "Sign-ups outnumber places and she assigns them by hand while keeping it fair. The board wants a members' question service about trips and gear."
+hidden = [
+  "Zero budget; she can offer a testimonial and a board reference.",
+  "Member data includes health notes, which she knows is sensitive.",
+  "The board is split on using any cloud service at all.",
+  "She has 14 years of trip reports as .txt files, about 2,000 of them.",
+]
+
+[[clients]]
+name = "Marlowe & Finch Accounting"
+sector = "accounting firm, six staff"
+contact = "Priya Raman"
+role = "partner"
+data = "client ledgers as CSV, invoices as PDF text dumps, a shared inbox"
+situation = "Staff answer the same forty client questions by email every month. She wants a draft-reply assistant that never invents a number."
+hidden = [
+  "Budget 8,000 EUR plus a monthly retainer if it works.",
+  "Anything that sends client data to a provider abroad needs a data-processing agreement, and her lawyer has opinions.",
+  "She measures success as minutes per email, currently about nine.",
+  "She wants a kill switch she can press herself.",
+]
+
+[[clients]]
+name = "Dockside Garage"
+sector = "car workshop, four mechanics"
+contact = "Mateo Alvarez"
+role = "owner"
+data = "job cards as JSON from the workshop system, parts price list CSV, supplier emails"
+situation = "Quotes take him an hour each evening. He wants quotes drafted from the job card and the price list."
+hidden = [
+  "The parts list has 11,000 rows and duplicate part numbers with different prices.",
+  "He will pay 1,500 EUR, cash flow permitting, and wants it in two weeks.",
+  "Mechanics type job cards on a phone; typos everywhere.",
+  "A wrong quote once cost him a customer; he would rather it refuses than guesses.",
+]
+
+[[clients]]
+name = "North Shore Camping"
+sector = "seasonal campsite with a kiosk"
+contact = "Solveig Brekke"
+role = "manager"
+data = "booking exports CSV, kiosk sales CSV, weather from a public API"
+situation = "Wants to know which weeks to staff up. Bookings and weather live in different places and she guesses."
+hidden = [
+  "The season is 14 weeks; a wrong guess costs one extra salary a week.",
+  "Budget 2,000 EUR, and she wants to run it herself afterwards.",
+  "The booking export has cancelled bookings mixed in with a status column.",
+  "She would happily be a reference customer.",
+]

@@ -1,0 +1,225 @@
+# Software engineer (backend leaning). Assumes little Python on entry (L1 drills it), then
+# testing and design, data and SQL, web APIs, reliability and delivery, and finally the work
+# that makes a senior: reading legacy code, design documents, estimates and code review.
+
+[track]
+key = "software-engineer"
+name = "Software engineer"
+summary = "From Python by hand to backend work a team would merge: tests and design, SQL, HTTP APIs, CI and containers, debugging legacy code, design docs and code review."
+role = "backend software engineer at a small product studio"
+common_packages = ["pytest", "ruff"]
+
+[[levels]]
+name = "Onboarding"
+phase = "day zero"
+competencies = [
+  "move around a terminal with cd, ls, pwd, cat",
+  "create a git repo, make a commit, read git status and git log",
+  "create a virtual environment with uv and say what it isolates",
+  "run a Python file and read the last line of a traceback",
+  "keep secrets in an env file that git ignores",
+]
+shapes = [
+  "set up the dev environment for a client repo the boss scaffolded, prove the tests run (and fail) from a clean venv, commit the setup",
+]
+required_accepted = 1
+estimate_hours = "1"
+gate_questions = [
+  "What does `uv venv` create on disk, and why is it in .gitignore?",
+  "What are three things `git status` can say about a file?",
+  "Read me the last line of a traceback you saw this week and tell me what it meant.",
+]
+extra_rules = "Almost no Python to write yet. The ticket is about the environment and the workflow."
+seed = "onboarding"
+
+[[levels]]
+name = "Python by hand"
+phase = "foundation"
+competencies = [
+  "variables, ints, floats, strings, f-strings",
+  "if / elif / else and comparisons",
+  "for and while loops, range, enumerate",
+  "lists, tuples, sets, dicts: the everyday operations",
+  "functions: parameters, defaults, return values, docstrings",
+  "reading and writing text, CSV and JSON files with pathlib",
+  "try / except with a specific exception and a useful error message",
+  "if __name__ == '__main__' and a tiny CLI with sys.argv",
+]
+shapes = [
+  "a script that reads a client's CSV or JSON export and prints a summary (totals, top N, counts by category)",
+  "a validator that reports bad rows with line numbers",
+  "a converter from one file shape to another",
+  "a lookup tool over a JSON file driven by a command-line argument",
+]
+required_accepted = 6
+estimate_hours = "1 to 2"
+gate_questions = [
+  "Pick one accepted ticket. Walk me through the data flow from file to printed number without opening the file.",
+  "When the tests failed the first time on your last ticket, what did the traceback say and what did you change?",
+  "Where would that script break on a file twice the size, or with a missing column?",
+]
+extra_rules = "Standard library only. No classes unless the ticket is about reading one. A clear loop beats a clever one-liner."
+seed = "sales-summary"
+
+[[levels]]
+name = "Tests and design in the small"
+phase = "craft"
+competencies = [
+  "writing your own pytest tests first: arrange, act, assert",
+  "fixtures, parametrize, pytest.raises, tmp_path, monkeypatch",
+  "dataclasses, enums and type hints on every signature",
+  "a class when state justifies it; composition before inheritance",
+  "separating pure logic from input and output so the logic is testable",
+  "big-O in practice: a list scan versus a dict lookup, measured",
+  "small commits, a branch per ticket, a commit message that says what changed and why",
+  "refactoring under green tests: rename, extract function, remove duplication",
+]
+shapes = [
+  "refactor a working but ugly script (provided) into testable functions without changing its output",
+  "implement a small domain model (orders, bookings, inventory) from written rules, tests first",
+  "make a slow function fast by changing the data structure, and prove it with a measurement",
+  "find a planted bug with a failing test before touching the code",
+]
+packages = ["hypothesis", "rich"]
+required_accepted = 5
+estimate_hours = "2 to 3"
+gate_questions = [
+  "Show me a test you wrote that failed for the right reason before it passed.",
+  "Which function in your last ticket was hardest to test, and what did that tell you about its design?",
+  "Why did the dict version win? Give me the numbers you measured.",
+]
+extra_rules = "From this level the learner also writes tests. The acceptance criteria name a minimum number of their own tests, and the review reads them first."
+
+[[levels]]
+name = "Data and SQL"
+phase = "craft"
+competencies = [
+  "relational modelling: tables, primary and foreign keys, one-to-many, many-to-many",
+  "SQL: select, where, join, group by, having, order, limit",
+  "sqlite3 with parameterised queries and transactions",
+  "schema migrations as numbered SQL files applied in order",
+  "indexes: when a query needs one, shown with EXPLAIN QUERY PLAN",
+  "a repository layer so the rest of the code never sees SQL",
+  "validating input at the boundary with pydantic or by hand",
+]
+shapes = [
+  "design the schema for a client's spreadsheet mess, load the data, answer five business questions in SQL",
+  "a repository module over SQLite with its own tests against a temp database",
+  "a migration runner that applies numbered .sql files exactly once",
+  "find the slow query, add the index, show the plan before and after",
+]
+packages = ["pydantic", "rich", "hypothesis"]
+required_accepted = 4
+estimate_hours = "2 to 4"
+gate_questions = [
+  "Why a parameterised query and never an f-string? Show me what goes wrong.",
+  "Draw the tables for your last ticket from memory. Which column would you add an index to first?",
+  "What happens to your data if the process dies between two inserts?",
+]
+extra_rules = "SQLite only; the tests create the database in tmp_path. Never build SQL with string formatting."
+
+[[levels]]
+name = "HTTP APIs and services"
+phase = "backend"
+competencies = [
+  "HTTP: methods, status codes, headers, idempotency",
+  "a REST API with FastAPI: routes, path and query parameters, request and response models",
+  "validation errors that tell the caller what to fix",
+  "authentication with an API key or a bearer token; never a secret in code",
+  "calling another service with httpx: timeouts, retries with backoff, a circuit of fallbacks",
+  "API tests with the framework's test client; no server process in tests",
+  "pagination, filtering and an OpenAPI document that is true",
+  "structured logging with a request id",
+]
+shapes = [
+  "a CRUD API over the repository layer from the previous level, with tests for every status code",
+  "add API-key auth and rate limiting to an existing service",
+  "a client library for a flaky third-party API (a fake the tests provide) with retries and timeouts",
+  "a webhook receiver that verifies a signature and is safe to call twice",
+]
+packages = ["fastapi", "uvicorn", "httpx", "pydantic", "python-dotenv", "rich", "hypothesis"]
+required_accepted = 4
+estimate_hours = "3 to 5"
+gate_questions = [
+  "A client calls your POST twice because their network hiccuped. What happens?",
+  "Walk me through one request: every layer it crosses and what each layer may reject.",
+  "Which of your endpoints can leak data between customers, and what test proves it does not?",
+]
+extra_rules = "Tests use the test client and a temp database; they never open a socket to the outside. Every external call has a timeout."
+
+[[levels]]
+name = "Delivery and reliability"
+phase = "backend"
+competencies = [
+  "a Dockerfile and a compose file for the service and its database",
+  "CI with GitHub Actions: lint, tests, a build, blocking on red",
+  "configuration from the environment; twelve-factor basics",
+  "health checks, graceful shutdown, structured logs, basic metrics",
+  "an SLI, SLO and error budget for one endpoint",
+  "debugging drills: breakpoint(), git bisect, reading logs, a postmortem without blame",
+  "profiling with cProfile and fixing the top line",
+  "concurrency basics: threads versus asyncio, and one race condition understood",
+]
+shapes = [
+  "containerise the service, add CI, make CI fail on purpose and show the red run",
+  "a planted-bug ticket: the repo misbehaves in production logs (provided), find it, fix it, write the postmortem",
+  "add health and readiness endpoints plus graceful shutdown, with tests",
+  "profile a slow endpoint and cut its time in half, with the before and after numbers",
+]
+packages = ["fastapi", "uvicorn", "httpx", "pydantic", "python-dotenv", "rich", "hypothesis"]
+required_accepted = 4
+estimate_hours = "3 to 6"
+gate_questions = [
+  "Walk me through the last bug you fixed: hypothesis, evidence, fix, proof.",
+  "Your SLO is 99.5 percent. How many bad minutes a month is that, and who gets woken when they are spent?",
+  "What does your service do with the requests in flight when it is told to stop?",
+]
+extra_rules = "Every failure path logs once with enough context to debug it. Silent fallback is a bug."
+
+[[levels]]
+name = "Senior work"
+phase = "leadership"
+kind = "doc"
+competencies = [
+  "read an unfamiliar legacy module and write down what it does before changing it",
+  "a one-page design document: problem, options, decision, risks, rollout",
+  "estimates with ranges and the assumptions behind them",
+  "reviewing someone else's pull request: what to block on, what to let go",
+  "scoping a feature with a non-technical stakeholder",
+  "a migration plan that can be rolled back",
+]
+shapes = [
+  "hold the scoping call, then write the design document and an estimate",
+  "review a pull request the boss hands you (as a diff in the ticket) and write the review",
+  "write the rollback plan for a risky migration",
+  "a reading report on a legacy module (provided): what it does, where it lies, what you would test first",
+]
+required_accepted = 3
+estimate_hours = "2 to 4"
+gate_questions = [
+  "What is the riskiest assumption in your design document, and how would you find out early that it is wrong?",
+  "In your review, what did you decide not to comment on, and why?",
+  "Your estimate was three days. What would make it ten?",
+]
+extra_rules = "kind is \"doc\". Files are templates with headings and one-line hints only, plus any diff or legacy code to read under data/. meeting is a client_call 1 day out when the shape is a scoping call, else null. run_command is null."
+
+[[series]]
+key = "taskd"
+name = "taskd: the studio's own task tracker"
+levels = [2, 5]
+goal = "A task tracker the studio actually uses, grown one layer at a time: a tested domain model, then SQLite storage, then a command-line interface, then an HTTP API, then a container with CI. Each milestone keeps every earlier test green."
+constraints = [
+  "The domain model never imports the database, the CLI or the web framework.",
+  "Each milestone starts from the learner's own code from the previous one.",
+  "Tests never touch the network and create their database in tmp_path.",
+  "No feature without a test written by the learner.",
+]
+milestones = [
+  "the domain model: Task, status transitions and the rules that forbid illegal ones, tests first",
+  "an in-memory repository and a service layer: add, list, filter, complete",
+  "SQLite storage behind the same repository interface, with numbered migrations",
+  "a command-line interface with argparse: add, list, done, with exit codes",
+  "an HTTP API with FastAPI over the same service layer",
+  "API-key auth, pagination and request-id logging",
+  "a Dockerfile, a compose file and a CI workflow that blocks on red",
+]
