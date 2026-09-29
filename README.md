@@ -7,8 +7,9 @@ standups and a weekly 1:1, and decides when you move up a level.
 
 The one rule the whole thing is built around: **the boss never writes your code.** Not a line.
 Reviews point at file and line and ask questions; a separate study-mode tutor explains concepts
-and quizzes you, and does not write your code either. Every model reply also passes through a
-code stripper, so the rule holds even when a model forgets it.
+and quizzes you, and does not write your code either. Reviews, and answers on the desk, in
+`boss help` and in `boss ask`, also pass through a code stripper, so the rule holds there even
+when a model forgets it. In live 1:1s and terminal standups the boss's prompt is the only guard.
 
 You choose the company name, the boss's name and temperament, your own name, and the career
 you are training for. Everything about the company and its people is fiction.
@@ -93,12 +94,14 @@ Two lanes, each pointing at any provider (see [docs/PROVIDERS.md](docs/PROVIDERS
 | `none` | nothing | built-in starter tickets and fact-only reviews (tests + ruff) |
 
 Ticket writing is the demanding call: the model must produce a brief, stubs, tests that fail on
-the stubs, and data files as one valid JSON object. The tool validates all of it (the tests
-must fail on the stub, stubs may contain no logic, dependencies must be on the level's
-allowlist) and retries once with the reason. Small local models often fail that validation;
-when they do, levels with a built-in seed fall back to it and other levels produce no ticket
-that day. API keys never go in `boss.toml`; they live in `~/.config/fenrir-boss/boss.env`
-(mode 600).
+the stubs, and data files as one valid JSON object. The tool validates the JSON (every field
+present, files that parse, stubs with no logic, a test file and a stub in every code ticket) and
+retries once with the reason. It then runs the tests on the stub and throws the ticket away if
+they pass. Dependencies off the level's allowlist are dropped, and the ticket says so. Small
+local models often fail that validation; when the model errors or its JSON is rejected twice,
+levels with a built-in seed fall back to it. Other levels, and a ticket whose tests pass on the
+stub, produce no ticket on that tick and the next tick tries again. API keys never go in
+`boss.toml`; they live in `~/.config/fenrir-boss/boss.env` (mode 600).
 
 ## Day to day
 
@@ -111,9 +114,9 @@ that day. API keys never go in `boss.toml`; they live in `~/.config/fenrir-boss/
 | `boss meet <id>` | hold the 1:1 (the gate to the next level) or a client scoping call |
 | `boss help "question"` | the tutor: explains and quizzes, never codes |
 | `boss ask "question"` | the boss: what the ticket asks and what gets checked |
-| `boss desk` | a local web page with all of the above, at `http://127.0.0.1:8110/desk/` |
+| `boss desk` | a local web page (ticket, boss and tutor threads, standups, inbox, ladder) at `http://127.0.0.1:8110/desk/` |
 | `boss ladder` | the levels and where you are |
-| `boss track list / show / new` | curricula |
+| `boss track list / show / check / new` | curricula |
 | `boss tick` | the scheduler: new tickets, meeting invites, late nudges |
 | `boss install-timer` | run the tick every 15 minutes (Linux, systemd user timer) |
 | `boss notebook` | the boss's private notes about you; it is your sandbox, you may read them |
@@ -121,13 +124,15 @@ that day. API keys never go in `boss.toml`; they live in `~/.config/fenrir-boss/
 Without the timer, run `boss tick` yourself whenever you sit down. It respects quiet hours, a
 minimum gap between tickets, and one open ticket at a time.
 
-Write `/ooc` in any conversation and the simulation answers out of character. If you sincerely
-ask whether the boss is an AI, it says so.
+Write `/ooc` in any conversation with the boss and the simulation answers out of character. If
+you sincerely ask whether the boss is an AI, it says so.
 
 ## What it will and will not do
 
 - It stays inside one folder (`[paths] root`). Sandboxes, inbox, calendar files and the SQLite
-  state all live there; paths from the model are checked before anything is written.
+  state all live there; paths from the model are checked before anything is written. The one
+  exception is the daily backup, which goes to `[backup] local_dir` (by default `<root>-backup`,
+  14 days kept).
 - Notifications are off by default. The inbox is markdown files. Desktop, ntfy and email
   pushes are opt-in in `boss.toml`, capped at two a day on weekdays.
 - Ticket sandboxes are Python (pytest + ruff through `uv`). Tracks for other roles use Python
@@ -143,8 +148,9 @@ ask whether the boss is an AI, it says so.
   an internal project series.
 - **Characters**: a markdown backstory in `src/boss/personas/`, or your own file via
   `[boss] bible`.
-- **Your study material**: point `[corpus] dirs` at folders of notes or transcripts and tickets
-  and reviews name your real material by title.
+- **Your study material**: set `[corpus] enabled = true` and list folders of notes (`.md`,
+  `.txt`) or transcripts in `[corpus] dirs`, each with a `name` and a `path`, and tickets and
+  reviews name your real material by title.
 - **Self-hosting the desk**: [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md). Read the warning
   there first.
 

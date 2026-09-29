@@ -60,6 +60,8 @@ need a model.
 ## What to expect from small models
 
 Ticket writing needs one long, valid JSON object containing code that parses, tests that fail
-on the stubs, and stubs with no logic. The validator rejects anything else and retries once
-with the reason. Models that cannot do that produce no ticket; `boss doctor --llm` only proves
-the lane answers, not that it can write tickets. Try `boss tick --force` and read the result.
+on the stubs, and stubs with no logic. The validator rejects a malformed object and retries once
+with the reason; a ticket whose tests already pass on the stubs is discarded without a retry.
+A model that cannot do that gets the level's built-in seed where there is one and produces no
+ticket where there is not; `boss doctor --llm` only proves the lane answers, not that it can
+write tickets. Try `boss tick --force` and read the result.
