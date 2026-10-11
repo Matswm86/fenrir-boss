@@ -5,6 +5,10 @@ clients and a ladder of levels. The boss hands you one small paid job at a time,
 repository with failing tests. You type every line. The boss reviews what you hand in, holds
 standups and a weekly 1:1, and decides when you move up a level.
 
+![The desk, the local web page for a fictional company](docs/screenshot.png)
+
+*The desk (`boss desk`) on day one: the open ticket, level progress and recent activity.*
+
 The one rule the whole thing is built around: **the boss never writes your code.** Not a line.
 Reviews point at file and line and ask questions; a separate study-mode tutor explains concepts
 and quizzes you, and does not write your code either. Reviews, and answers on the desk, in
@@ -153,6 +157,22 @@ you sincerely ask whether the boss is an AI, it says so.
   reviews name your real material by title.
 - **Self-hosting the desk**: [docs/SELF-HOSTING.md](docs/SELF-HOSTING.md). Read the warning
   there first.
+
+## How it works
+
+`boss` is a command-line tool in Python that needs nothing beyond the standard library. Each
+ticket is a small git repository with stubs and failing tests; `boss submit` runs pytest and
+ruff on it through `uv`, then asks the model for a review that points at file and line. State
+(tickets, submissions, reviews, meetings, the boss's notes) lives in a SQLite file under your
+root folder, and the inbox and calendar are plain files beside it. The scheduler tick creates
+tickets and meeting invites and sends late nudges; run it by hand or from a systemd user timer.
+The model is reached through the provider you configure, and `boss desk` serves its web page
+locally from the same program.
+
+## Status
+
+Version 0.2.0. Ticket sandboxes are Python only, and the timer installer targets Linux with
+systemd; elsewhere you run `boss tick` yourself.
 
 ## Development
 
